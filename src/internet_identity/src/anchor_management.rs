@@ -15,7 +15,6 @@ pub mod tentative_device_registration;
 
 pub fn get_anchor_info(anchor_number: AnchorNumber) -> IdentityAnchorInfo {
     let anchor = state::anchor(anchor_number);
-    let metadata = anchor.identity_metadata().clone().unwrap_or_default();
     let devices = anchor
         .into_devices()
         .into_iter()
@@ -37,7 +36,6 @@ pub fn get_anchor_info(anchor_number: AnchorNumber) -> IdentityAnchorInfo {
                     expiration: *expiration,
                     tentative_device: Some(tentative_device.clone()),
                 }),
-                metadata,
             },
             Some(TentativeDeviceRegistration { expiration, .. }) if *expiration > now => {
                 IdentityAnchorInfo {
@@ -46,13 +44,11 @@ pub fn get_anchor_info(anchor_number: AnchorNumber) -> IdentityAnchorInfo {
                         expiration: *expiration,
                         tentative_device: None,
                     }),
-                    metadata,
                 }
             }
             None | Some(_) => IdentityAnchorInfo {
                 devices,
                 device_registration: None,
-                metadata,
             },
         }
     })
