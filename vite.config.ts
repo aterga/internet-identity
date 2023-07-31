@@ -21,7 +21,6 @@ export default defineConfig(({ mode }: UserConfig): UserConfig => {
   process.env = {
     ...process.env,
     II_FETCH_ROOT_KEY: `${process.env.II_FETCH_ROOT_KEY ?? "0"}`,
-    II_DUMMY_AUTH: `${process.env.II_DUMMY_AUTH ?? "0"}`,
     II_DUMMY_CAPTCHA: `${process.env.II_DUMMY_CAPTCHA ?? "0"}`,
     II_VERSION: `${process.env.II_VERSION ?? ""}`,
   };
@@ -72,7 +71,7 @@ export default defineConfig(({ mode }: UserConfig): UserConfig => {
     },
     server: {
       proxy: {
-        "/api": "http://127.0.0.1:4943",
+        "/api": "https://icp-api.io",
       },
     },
   };

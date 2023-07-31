@@ -1,5 +1,3 @@
-import { assertNonNullish } from "@dfinity/utils";
-import { readFileSync } from "fs";
 import { minify } from "html-minifier-terser";
 import { extname } from "path";
 import { Plugin } from "vite";
@@ -9,24 +7,7 @@ import viteCompression from "vite-plugin-compression";
  * Read the II canister ID from dfx's local state
  */
 const readCanisterId = (): string => {
-  const canisterIdsJsonFile = "./.dfx/local/canister_ids.json";
-
-  try {
-    const {
-      internet_identity: { local: canisterId },
-    } = JSON.parse(readFileSync(canisterIdsJsonFile, "utf-8"));
-
-    assertNonNullish(
-      canisterId,
-      `Could not get canister ID from ${canisterIdsJsonFile}`
-    );
-
-    console.log("Read canister ID:", canisterId);
-
-    return canisterId;
-  } catch (e) {
-    throw Error(`Could not get canister ID from ${canisterIdsJsonFile}: ${e}`);
-  }
+  return "rdmx6-jaaaa-aaaaa-aaadq-cai";
 };
 
 /**
