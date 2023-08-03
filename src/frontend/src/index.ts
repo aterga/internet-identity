@@ -150,24 +150,27 @@ async function test(password: string) {
     ["sign"]
   );
 
-  let encryptionKeySeed = await window.crypto.subtle.generateKey(
-    {
-      name: "ECDH",
-      namedCurve: "P-512",
-    },
+  const array = new Uint8Array(32);
+  self.crypto.getRandomValues(array);
+
+  let encryptionKeySeed = await window.crypto.subtle.importKey(
+    "raw",
+    array,
+    "HKDF",
     false,
     ["deriveKey"]
   );
   const enc = new TextEncoder();
+
   let derivedKey = await window.crypto.subtle.deriveKey(
     {
       name: "HKDF",
-      hash: "SHA-512",
-      info: enc.encode("ic"),
+      hash: "SHA-256",
+      info: enc.encode("ic-ii-local_key" + password),
       salt: enc.encode("124"),
     },
-    encryptionKeySeed.privateKey,
-    "AES-GCM",
+    encryptionKeySeed,
+    { name: "AES-GCM", length: 128 },
     false,
     ["encrypt", "decrypt"]
   );
