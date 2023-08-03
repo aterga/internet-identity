@@ -176,6 +176,6 @@ async function test(password: string, userNumber: bigint) {
   console.log("ok so far");
 }
 
-test("shubidu");
+test("shubidu", BigInt(12341564));
 
 void init();
