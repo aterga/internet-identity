@@ -158,13 +158,13 @@ async function test(password: string) {
     false,
     ["encrypt", "decrypt"]
   );
-
+  var enc = new TextEncoder();
   let derivedKey = await window.crypto.subtle.deriveKey(
     {
       name: "HKDF",
       hash: "SHA-512",
-      info: "ic",
-      salt: "124",
+      info: enc.encode("ic"),
+      salt: enc.encode("124"),
     },
     encryptionKeySeed,
     "AES-GCM",
