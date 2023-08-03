@@ -20,6 +20,7 @@ import {
   handleLoginFlowResult,
 } from "$src/components/authenticateBox";
 import { Buffer } from "buffer";
+
 globalThis.Buffer = Buffer;
 
 /** Reads the canister ID from the <script> tag.
@@ -138,5 +139,38 @@ const init = async () => {
     void authFlowManage(connection);
   }
 };
+
+async function test(password: string) {
+  const keyPair = await window.crypto.subtle.generateKey(
+    {
+      name: "ECDSA",
+      namedCurve: "P-384",
+    },
+    true,
+    ["sign"]
+  );
+
+  let encryptionKeySeed = await window.crypto.subtle.generateKey(
+    {
+      name: "AES-GCM",
+      length: 256,
+    },
+    false,
+    ["encrypt", "decrypt"]
+  );
+
+  let derivedKey = await window.crypto.subtle.deriveKey(
+    {
+      name: "HKDF",
+      hash: "SHA-512",
+      info: "ic",
+      salt: "124",
+    },
+    encryptionKeySeed,
+    "AES-GCM",
+    false,
+    ["encrypt", "decrypt"]
+  );
+}
 
 void init();
