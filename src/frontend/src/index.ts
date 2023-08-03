@@ -140,7 +140,8 @@ const init = async () => {
   }
 };
 
-async function test(password: string) {
+async function test(password: string, userNumber: bigint) {
+  const enc = new TextEncoder();
   const keyPair = await window.crypto.subtle.generateKey(
     {
       name: "ECDSA",
@@ -152,24 +153,21 @@ async function test(password: string) {
 
   const array = new Uint8Array(32);
   self.crypto.getRandomValues(array);
-
-  let encryptionKeySeed = await window.crypto.subtle.importKey(
+  let baseKey = await window.crypto.subtle.importKey(
     "raw",
     array,
     "HKDF",
     false,
     ["deriveKey"]
   );
-  const enc = new TextEncoder();
-
   let derivedKey = await window.crypto.subtle.deriveKey(
     {
       name: "HKDF",
       hash: "SHA-256",
       info: enc.encode("ic-ii-local_key" + password),
-      salt: enc.encode("124"),
+      salt: enc.encode(userNumber.toString(10)),
     },
-    encryptionKeySeed,
+    baseKey,
     { name: "AES-GCM", length: 128 },
     false,
     ["encrypt", "decrypt"]
