@@ -152,13 +152,13 @@ async function test(password: string) {
 
   let encryptionKeySeed = await window.crypto.subtle.generateKey(
     {
-      name: "AES-GCM",
-      length: 256,
+      name: "ECDH",
+      namedCurve: "P-512",
     },
     false,
-    ["encrypt", "decrypt"]
+    ["deriveKey"]
   );
-  var enc = new TextEncoder();
+  const enc = new TextEncoder();
   let derivedKey = await window.crypto.subtle.deriveKey(
     {
       name: "HKDF",
@@ -166,11 +166,15 @@ async function test(password: string) {
       info: enc.encode("ic"),
       salt: enc.encode("124"),
     },
-    encryptionKeySeed,
+    encryptionKeySeed.privateKey,
     "AES-GCM",
     false,
     ["encrypt", "decrypt"]
   );
+
+  console.log("ok so far");
 }
+
+test("shubidu");
 
 void init();
